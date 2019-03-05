@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[在当前目录打开Cygwin的正确姿势]]></title>
+      <url>https://zhangnai.xin/2019/01/02/open-cygwin-here/</url>
+      <content type="html"><![CDATA[<p>在网上找了一些解决方案，一般都是雷同的方法。对于一些细节并没有兼顾到，比如路径中存在空格的情况，比如根目录与非根目录的路径形式的不同。</p>
+<h1 id="改进之后的方案"><a href="#改进之后的方案" class="headerlink" title="改进之后的方案"></a>改进之后的方案</h1><p>.bashrc</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export _T=$&#123;_T//\\//&#125;   # replace backslash to fowardslash</span><br><span class="line">export _T=$&#123;_T//\"/&#125;    # 如果目录带中文，传入的目录会在首尾加引号，如果无中文则不会加双引号。这里删除首尾双引号，归一处理</span><br><span class="line">if [[ $_T == "" ]]; then</span><br><span class="line">    export _T="C:\cygwin64\home\xxx"  </span><br><span class="line">fi</span><br><span class="line">cd "$_T"</span><br></pre></td></tr></table></figure>
+<p>注册表：HKEY_CLASSES_ROOT\Directory\Background\shell\open in Cygwin\command</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c:\cygwin64\bin\mintty.exe /bin/env _T="%V/" /bin/bash -l</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<hr>
+<h1 id="相关解释"><a href="#相关解释" class="headerlink" title="相关解释"></a>相关解释</h1><h2 id="关于export-T-T-quot"><a href="#关于export-T-T-quot" class="headerlink" title="关于export _T=${_T//\&quot;/}"></a>关于<code>export _T=${_T//\&quot;/}</code></h2><p>如果目录带中文，传入的目录会在首尾加引号，如果无中文则不会加双引号。这里删除首尾双引号，归一处理。<br>如果不加处理，在有中文的路径中会提示找不到（带引号的）目录。</p>
+<h2 id="关于-T-quot-V-quot"><a href="#关于-T-quot-V-quot" class="headerlink" title="关于_T=&quot;%V/&quot;"></a>关于<code>_T=&quot;%V/&quot;</code></h2><h3 id="1-双引号：兼容目录路径有空格的情况"><a href="#1-双引号：兼容目录路径有空格的情况" class="headerlink" title="1.双引号：兼容目录路径有空格的情况"></a>1.双引号：兼容目录路径有空格的情况</h3><p>比较好理解，不解释了。</p>
+<h3 id="2-后面的斜杠：为了兼容根目录与非根目录的不同形式。"><a href="#2-后面的斜杠：为了兼容根目录与非根目录的不同形式。" class="headerlink" title="2. 后面的斜杠：为了兼容根目录与非根目录的不同形式。"></a>2. 后面的斜杠：为了兼容根目录与非根目录的不同形式。</h3><p>win10中各分区的根目录以反斜杠结尾，非根目录则末尾没有反斜杠。例如在C盘根目录，传入的参数是<code>&quot;C:\&quot;</code>，这样拼接后成了<code>_T=&quot;C:\&quot;</code>，末尾的引号会被转义成引号，拼接成了错误命令：<code>/bin/env _T=C:&quot; /bin/bash -l</code>，如图所示。</p>
+<img src="/2019/01/02/open-cygwin-here/根目录引号被转义.png" title="根目录引号被转义">
+<p>而非根目录的末尾不会有反斜杠，例如C盘下的子目录cygwin64，传入的参数是<code>&quot;C:\cygwin64&quot;</code>，拼接之后<code>_T=&quot;C:\cygwin64&quot;</code>，没问题。</p>
+<p>为了归一处理，这里在<code>%V</code>后面加了个正斜杠<code>/</code>，这样做的效果是：<br>对于根目录情况，例如<code>&quot;C:\&quot;</code>拼接成了<code>&quot;C:\/&quot;</code>，进而被解析成<code>&quot;C:/&quot;</code>。也就是会在后面的反斜线后面加一个正斜线，将正斜杠转义，<strong>破坏对后面引号的转义</strong>，同时目录后面加一个正斜线<strong>不影响目录读取</strong>。<br>对于非根目录情况，例如<code>&quot;C:\cygwin64&quot;</code>拼接成了<code>&quot;C:\cygwin64/&quot;</code>，解析后也是<code>&quot;C:\cygwin64/&quot;</code>，相当于在后面追加一个正斜线，也<strong>不会影响目录读取</strong>。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 填坑 </tag>
+            
+            <tag> 备忘技巧 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[暴力而不失优雅地升级Hexo主题]]></title>
+      <url>https://zhangnai.xin/2018/11/11/hexo-theme-upgrade/</url>
+      <content type="html"><![CDATA[<p>对hexo页面排版的改动时常需要改主题目录里的文件，但主题也会升级，这意味着用户和主题开发者可能会改动相同的代码，如果不妥善管理代码，需要升级主题时，可能会很不优雅。本文以Next主题为例。</p>
+<h1 id="手动升级"><a href="#手动升级" class="headerlink" title="手动升级"></a>手动升级</h1><p>面对升级版本之间的改动，一种容易想到的方法是纯手动升级。这里有两个案例</p>
+<ol>
+<li><p><a href="https://ricky.moe/2017/06/28/hexo-theme-update/" target="_blank" rel="noopener">Hexo 主题快速升级办法-知识沉言</a></p>
+<blockquote>
+<p>手动保存主题改动过的文件<br>如果你在themes/xxx主题文件有自定义的修改，请自行手动备份一下；如果你是大改的话，我也没有好办法</p>
+</blockquote>
+</li>
+<li><p><a href="https://zerosoul.github.io/2016/06/15/upgrade-hexo-to-3-2/" target="_blank" rel="noopener">Hexo升级之坑-杨二小</a></p>
+<blockquote>
+<p>断断续续折腾了两天，才升级成功。所以，如果有啥感想，那就是：没事别瞎TM升级！当然，如果一定要升级，最好做增量升级：另起炉灶，一项一项地加功能，这样好定位问题，也容易回滚。</p>
+</blockquote>
+</li>
+</ol>
+<p>看来手动升级不够优雅，容易采坑。</p>
+<h1 id="通过git升级"><a href="#通过git升级" class="headerlink" title="通过git升级"></a>通过git升级</h1><p>为了避免手动升级，一个思路是采用git仓库管理主题目录，当主题升级时，采用git进行平滑升级。<br>这看似优雅，却会引入另一个问题：如何在主博客仓库中合理管理一个子主题仓库？<a href="https://github.com/iissnan/hexo-theme-next/issues/932" target="_blank" rel="noopener">NexT Issue #932</a>有很多讨论，也有一些解决方案，这里列出几个：</p>
+<h2 id="1-采用数据文件的方式"><a href="#1-采用数据文件的方式" class="headerlink" title="1 采用数据文件的方式"></a>1 采用数据文件的方式</h2><p>参考<a href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/DATA-FILES.md" target="_blank" rel="noopener">数据文件的介绍</a>和<a href="https://github.com/iissnan/hexo-theme-next/issues/328" target="_blank" rel="noopener">NexT Issue #328</a>。采用数据文件也只能避免_config.yml文件冲突，对于用户修改页面模板情况就没办法了。</p>
+<h2 id="2-基于fork-submodule"><a href="#2-基于fork-submodule" class="headerlink" title="2 基于fork + submodule"></a>2 基于fork + submodule</h2><p>维护父子两个仓库大大增加了复杂度，还要fork一份冗余的主题仓库，为了不经常有的主题升级增加这样的复杂性，实在没什么必要。</p>
+<h2 id="3-同步工具"><a href="#3-同步工具" class="headerlink" title="3 同步工具"></a>3 同步工具</h2><p>有用户写了一个hexo同步工具<a href="https://github.com/coneycode/hexo-git-backup" target="_blank" rel="noopener">hexo-git-backup</a>，支持博客、主题的同步，支持自定义commit消息。但本质上是个备份工具，需要删除掉主题目录的.git目录，所以也不支持通过git升级主题。</p>
+<p>采用git升级的方式，确实能够解放双手，平滑升级，但毕竟还是引入了一定的复杂度。有没有一种既能利用git的平滑升级，又不那么复杂的方案？</p>
+<h1 id="暴力但不失优雅的解决方式"><a href="#暴力但不失优雅的解决方式" class="headerlink" title="暴力但不失优雅的解决方式"></a>暴力但不失优雅的解决方式</h1><p>由于主题升级的次数相对较少，一般不如用户修改频繁，所以一种简单易行暴力的方式是，git只用来升级，不用来同步，既能利用git进行平滑升级，又避免了引入双层git的复杂情况。</p>
+<a id="more"></a>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>由hexo博客主目录作为git仓库统一管理所有代码，主题目录不设单独git仓库。每次升级主题时，手动将主题目录制作成临时的git仓库，进而以git的方式进行升级，升级过后可以再销毁这个临时git仓库，由博客主仓库管理升级变更。</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><ol>
+<li>记录当前的主题版本tag，版本号在主题目录的package.json中的version字段。</li>
+<li>随便找个其他目录，clone最新版本的主题仓库，新建分支temp并checkout，再将temp分支reset –hard到当前版本的tag。</li>
+<li>【暴力】确认hexo的主题目录中没有.git目录，如果有，删掉。此时拿到步骤2的temp分支对应的.git文件夹，将其拷贝到hexo的主题目录中。</li>
+<li>在主题目录中的temp分支上做一次提交（这次提交代表着在上一个版本基础上对主题目录所做的所有更改）。</li>
+<li>在temp分支上merge想要升级到的版本tag，如果有冲突逐一解决掉。</li>
+<li>至此升级完成，主题目录下的.git<strong>可以</strong>删掉了（销毁临时git仓库）。升级完成后记得将主目录做一次提交，主目录会将主题升级的所有改动进行提交。</li>
+</ol>
+<h2 id="特殊情况——NexT从v5-1-x升级到v6-0-x"><a href="#特殊情况——NexT从v5-1-x升级到v6-0-x" class="headerlink" title="特殊情况——NexT从v5.1.x升级到v6.0.x"></a>特殊情况——NexT从v5.1.x升级到v6.0.x</h2><p>NexT从v5.1.x升级到v6.0.x比较特殊，涉及到代码仓库的更改，代码仓库从<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">iissnan</a>改为<a href="https://github.com/theme-next" target="_blank" rel="noopener">theme-next</a>。官方推荐这种方式：<a href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/UPDATE-FROM-5.1.X.md" target="_blank" rel="noopener">Update from NexT v5.1.x
+</a>，但这种方式治标不治本，保留了iissnan仓库的主题，新建了来自theme-next仓库的主题，做了一个切换而已；而迁移的过程，还是依赖手动，并没有利用类似git merge的平滑升级。<br>由于本文方法并不强依赖于git提交的连续性，而是只需要临时制作一个git仓库即可，所以天然支持这种更换git仓库的升级。</p>
+<p>本文方法稍加改动就可以适用于NexT从v5.1.x升级到v6.0.x，具体步骤：</p>
+<ol>
+<li>利用iissnan仓库的.git目录，将主题升级到iissnan仓库的最终版本。</li>
+<li>利用theme-next仓库的.git目录，承接后续的升级。</li>
+</ol>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>NexT v6.5.0主题仓库的.gitignore默认忽略了lib/里的font-awasome等内容（其他版本没有了解），如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">.idea/</span><br><span class="line">*.log</span><br><span class="line">*.iml</span><br><span class="line">yarn.lock</span><br><span class="line">package-lock.json</span><br><span class="line">node_modules/</span><br><span class="line"></span><br><span class="line"># Ignore unused verdors&apos; files</span><br><span class="line">source/lib/fancybox/*</span><br><span class="line">!source/lib/fancybox/source/</span><br><span class="line"></span><br><span class="line">source/lib/font-awesome/less/</span><br><span class="line">source/lib/font-awesome/scss/</span><br><span class="line"></span><br><span class="line">source/lib/ua-parser-js/*</span><br><span class="line">!source/lib/ua-parser-js/dist/</span><br><span class="line"></span><br><span class="line">source/lib/Han/*</span><br><span class="line">!source/lib/Han/dist/</span><br></pre></td></tr></table></figure></p>
+<p>这带来一个问题，如果主题仓库不是fork来的，而是想用主目录统一管理博客源代码，font-awesome等内容将无法推送到远程仓库，导致在其他环境从远程仓库clone时拿不到font-awasome，进而页面显示不正常。所以这里注意一下，主题.gitignore文件里的内容该删的删，该改的改。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 备忘技巧 </tag>
+            
+            <tag> Git </tag>
+            
+            <tag> hexo </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[模板方法模式和策略模式]]></title>
+      <url>https://zhangnai.xin/2017/04/03/Template-Pattern-And-Strategy-Pattern/</url>
+      <content type="html"><![CDATA[<h1 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h1><p>有多个相似的类，找到他们的共性，抽象出来，放入公共的抽象父类，作为模板。</p>
+<h1 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h1><p>1.将算法封装成算法类，变抽象为形象（让不同的算法【抽象】，变成一个个算法策略【形象】）<br>2.将算法选择逻辑与算法本身解耦（由算法内部if-else代码级耦合【难以维护】，变为客户端选择算法类实例的耦合【灵活】）</p>
+<h2 id="不用策略模式："><a href="#不用策略模式：" class="headerlink" title="不用策略模式："></a>不用策略模式：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(客户==<span class="string">"老客户"</span>)&#123;</span><br><span class="line">    price*=<span class="number">0.8</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(客户==<span class="string">"大客户"</span>)&#123;</span><br><span class="line">    price*=<span class="number">0.9</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> price;</span><br></pre></td></tr></table></figure>
+<h2 id="用策略模式："><a href="#用策略模式：" class="headerlink" title="用策略模式："></a>用策略模式：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OldCustomer</span> <span class="keyword">implements</span> <span class="title">Strategy</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPrice</span><span class="params">(<span class="keyword">int</span> price)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> price*<span class="number">0.8</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BigCustomer</span> <span class="keyword">implements</span> <span class="title">Strategy</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPrice</span><span class="params">(<span class="keyword">int</span> price)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> price*<span class="number">0.9</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>客户端：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Strategy strategy;</span><br><span class="line"><span class="keyword">if</span>(客户==<span class="string">"老客户"</span>)&#123;</span><br><span class="line">    strategy = <span class="keyword">new</span> OldCustomer();</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>(客户==<span class="string">"大客户"</span>)&#123;</span><br><span class="line">    strategy = <span class="keyword">new</span> BigCustomer();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> strategy.getPrice(price);</span><br></pre></td></tr></table></figure></p>
+<h1 id="二者关系"><a href="#二者关系" class="headerlink" title="二者关系"></a>二者关系</h1><h2 id="相似点："><a href="#相似点：" class="headerlink" title="相似点："></a>相似点：</h2><p>没啥太大的相似点，之所以容易混淆，是因为在策略模式中，各个策略比较像，不同的策略类<strong>有可能</strong>包含同样的方法，这时候可以用模板方法模式构造这些策略类。</p>
+<h2 id="不同点："><a href="#不同点：" class="headerlink" title="不同点："></a>不同点：</h2><p>既然没啥相似点，也不好说不同点。主要比较以下两点：1.实现方式 2.各模式强调了什么。</p>
+<h3 id="模板方法模式-1"><a href="#模板方法模式-1" class="headerlink" title="模板方法模式"></a>模板方法模式</h3><ol>
+<li>用继承，模板是抽象父类</li>
+<li>强调一个<strong>模板</strong>，让相似类有所管理</li>
+</ol>
+<h3 id="策略模式-1"><a href="#策略模式-1" class="headerlink" title="策略模式"></a>策略模式</h3><ol>
+<li>用接口，各算法实现相应的策略接口</li>
+<li>强调策略的<strong>形象性</strong>，不再操作<strong>抽象</strong>的算法，而是在客户端中根据情况不同直接选用不同策略。改变、扩展策略类，总比修改源代码中的if-else要优雅。</li>
+</ol>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 设计模式 学习 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Echarts坑-动态折线图更新时跳动]]></title>
+      <url>https://zhangnai.xin/2017/03/18/Echarts-line/</url>
+      <content type="html"><![CDATA[<p>用Echarts做动态折线图，参照-&gt;<a href="https://echarts.baidu.com/demo.html#dynamic-data2" target="_blank" rel="noopener">这个demo</a><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
+<p>一番试验找到原因，是定义的data格式问题。是我把demo中的randomData()函数改了个格式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> value = <span class="number">1</span> + (<span class="built_in">Math</span>.random() - <span class="number">0.5</span>) * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> [now, value*<span class="number">1000</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改完虽然能运行，能实时更新数据，但每次插入一个数据，绘图呈现的效果就是重新绘制全图一样，有一个从水平线扩展成折线图的感觉，所以造成了图形不停跳动。当然，demo中并没有这样的跳动，是很稳定的平移。</p>
+<p>解决方法：改成以下格式，也就是demo给出的格式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    now = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    value =  <span class="built_in">Math</span>.random() * <span class="number">21</span> - <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> &#123; </span><br><span class="line">        name :now,</span><br><span class="line">        value: [</span><br><span class="line">            now,</span><br><span class="line">            <span class="built_in">Math</span>.round(value)</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后便能平滑的移动了。</p>
+<p>总结：返回值必须是一个对象，有name属性和value属性。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 填坑 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[群视频课笔记——码农翻身]]></title>
+      <url>https://zhangnai.xin/2016/10/13/note/</url>
+      <content type="html"><![CDATA[<h1 id="笔记"><a href="#笔记" class="headerlink" title="笔记"></a>笔记</h1><ol>
+<li><p>六个月，能否学好web开发？</p>
+<blockquote>
+<p>不够，六个月只够学习一门技能。</p>
+</blockquote>
+</li>
+<li><p>跟对老板、师傅，能有更多收获，不用重视薪资。</p>
+</li>
+<li><p>在做普通项目中脱颖而出？</p>
+<blockquote>
+<p>做好项目本身<br>尽量主动，比如重构代码。忌讳让做什么只做什么 </p>
+</blockquote>
+</li>
+<li><p>如何看源码？</p>
+<blockquote>
+<p>1.跑起来<br>2.看业务</p>
+</blockquote>
+</li>
+</ol>
+<a id="more"></a>
+<ol start="5">
+<li><p>Redis集群如何学习</p>
+<blockquote>
+<p>难以模拟实际应用的大量数据，项目遇到再深挖较好。否则只搭建没用。</p>
+</blockquote>
+</li>
+<li><p>为何跳槽？</p>
+<blockquote>
+<p>不想只做SSH，找喜欢的方向深入（做引擎）</p>
+</blockquote>
+</li>
+<li><p>重基础：</p>
+<blockquote>
+<p>操作系统&amp;网络</p>
+</blockquote>
+</li>
+<li><p>大数据：</p>
+<blockquote>
+<p>建模更重要</p>
+</blockquote>
+</li>
+<li><p>如何表述做过的项目？</p>
+<blockquote>
+<p>1.业务<br>2.架构<br>3.做的工作</p>
+</blockquote>
+</li>
+<li><p>JDBC：必会</p>
+</li>
+<li><p>混合开发能否代替原生APP？</p>
+<blockquote>
+<p>不能</p>
+</blockquote>
+</li>
+<li><p>反射常用吗？</p>
+<blockquote>
+<p>直接不常用，间接常用（框架中）</p>
+</blockquote>
+</li>
+<li><p>需要掌握全部设计模式。</p>
+</li>
+<li><p>如何学习框架？</p>
+<blockquote>
+<p>1.书<br>2.项目</p>
+</blockquote>
+</li>
+<li><p>编译原理：不需深入了解，除非写语言</p>
+</li>
+<li><p>PHP：Facebook，新浪</p>
+</li>
+<li><p>Java：生态繁荣，适合大规模团队协作</p>
+</li>
+<li><p>数据结构用处？</p>
+<blockquote>
+<p>锻炼思维，分析算法实现过程，注重效率即可，不需背记复杂数据结构</p>
+</blockquote>
+</li>
+<li><p>需要定制Nginx——学C语言的好机会</p>
+</li>
+</ol>
+<hr>
+<h1 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h1><blockquote>
+<p>网站：<a href="https://www.imooc.com/" target="_blank" rel="noopener">imooc</a>，<a href="https://www.itheima.com/" target="_blank" rel="noopener">黑马</a><br>群文件：《项目实战之安全基础》<br><a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=415513252&amp;idx=1&amp;sn=1c1211e23c507c34f9befbf5282a85c8&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">《假如时光能够倒流， 我会这么学习Java》</a><br><a href="https://toutiao.io/posts/394009/app_preview" target="_blank" rel="noopener">《小王的架构师之路》</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513182&amp;idx=1&amp;sn=927a7066c46f854baa5b07cf0fffd654" target="_blank" rel="noopener">《码农和英语》</a></p>
+</blockquote>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hexo+GitHub Pages多终端同步]]></title>
+      <url>https://zhangnai.xin/2016/10/11/create-a-new-blog-dir/</url>
+      <content type="html"><![CDATA[<hr>
+<p>2016年11月8日更新：<br>11月3日下午Github Pages升级了Jekyll,导致了next主题下source/vendors路径下的部分js和css无法访问。<br>解决：在.deploy_git目录中加入名为.nojekyll的空文件。</p>
+<hr>
+<p>原文：</p>
+<p>博客用Hexo+GitHub Pages搭建，托管在GitHub的一个仓库中，仓库分两个分支：hexo和master。hexo作为默认分支，存放博客源代码，master分支存放博客生成页面。如何实现多终端同步？</p>
+<a id="more"></a>
+<p>为了筛选出配置文件、主题目录、博文等重要信息，作为需要GItHub管理的文件，配置.gitignore文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
+<p>需要多机同步时，只需将hexo分支clone到本地，再进入目录安装npm即可。处理命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/xiaobai050/xiaobai050.github.io.git</span><br><span class="line"><span class="built_in">cd</span> xiaobai050.github.io</span><br><span class="line">npm install</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+<p>由于package.json的存在，无需手动添加插件，npm install的时候会根据package.json中的插件列表自动加载相应插件。</p>
+<p>至此，本机的同步完成。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 备忘技巧 </tag>
+            
+            <tag> Git </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[青蛙过河问题]]></title>
+      <url>https://zhangnai.xin/2016/09/25/LeetCode-Frog-Jump/</url>
+      <content type="html"><![CDATA[<p><a href="https://leetcode.com/problems/frog-jump/" target="_blank" rel="noopener">LeetCode:403. Frog Jump</a></p>
+<h1 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h1><p>深度优先搜索：<br>从头至尾遍历石头，从每个石头上分别以k-1,k,k+1的力量向前跳一下，如果这三个力量范围内没有石头，则返回；否则继续先前跳一下……直至到达最后一个石头。</p>
+<a id="more"></a>
+<p>没有记忆功能，每次遍历需全盘重新计算，<strong>时间复杂度O(3^n)</strong>,石头多了会超时。于是加入记忆搜索，有了版本二。</p>
+<h1 id="版本二"><a href="#版本二" class="headerlink" title="版本二"></a>版本二</h1><p>迭代+记忆搜索：<br>加入记忆搜索，为每块石头建立一个力量表，每到达一块石头，就把这一跳所用的力度记录在这块石头的力量表中。这样一来，一块石头是否可以到达，取决于这块石头的力量表是否为空。</p>
+<ul>
+<li>题目要求第一跳力度为k=1，则在石头1上记录力量k=1，然后从第二块石头开始遍历：</li>
+<li>对于第i个被遍历的石头，判断从石头1到石头(i-1)范围内的每一个石头上，是否存在跳到石头i上的力量，如果存在(代表能跳到石头i上)，则在石头i的力量表中添加这个力量值。</li>
+<li>所有石头遍历完，判断最后一块石头的力量表是否为空，则得出是否能到达最后。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	HashMap&lt;Integer, Boolean&gt; mapTable = <span class="keyword">new</span> HashMap&lt;Integer, Boolean&gt;();</span><br><span class="line">	<span class="keyword">int</span>[] stones;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canCross</span><span class="params">(<span class="keyword">int</span>[] stones)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> len = stones.length;</span><br><span class="line">		<span class="keyword">if</span> (len &lt; <span class="number">2</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span> (stones[<span class="number">1</span>] != <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		<span class="keyword">if</span> (len == <span class="number">2</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">this</span>.stones = stones;</span><br><span class="line"></span><br><span class="line">		mapTable.put(<span class="number">0</span> | <span class="number">1</span> &lt;&lt; <span class="number">11</span>, <span class="keyword">true</span>);</span><br><span class="line">		mapTable.put(<span class="number">1</span> | <span class="number">1</span> &lt;&lt; <span class="number">11</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> solve(len);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> endPos)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 枚举前面所有点，看是否能到这里，如果能，记录跨度k</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> nowPos = <span class="number">2</span>; nowPos &lt; endPos; nowPos++)</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; nowPos; j++) &#123;</span><br><span class="line">				<span class="keyword">int</span> k = canArriveByK(j, nowPos);</span><br><span class="line">				<span class="keyword">if</span> (k != <span class="number">0</span>) &#123;</span><br><span class="line">					<span class="comment">// 在当前位置，记录当前跨度k</span></span><br><span class="line">					<span class="keyword">if</span> (nowPos == endPos - <span class="number">1</span>)</span><br><span class="line">						<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">					mapTable.put(nowPos | k &lt;&lt; <span class="number">11</span>, <span class="keyword">true</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">canArriveByK</span><span class="params">(<span class="keyword">int</span> j, <span class="keyword">int</span> nowPos)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> begin = stones[j];</span><br><span class="line">		<span class="keyword">int</span> end = stones[nowPos];</span><br><span class="line">		<span class="keyword">int</span> k = end - begin;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (mapTable.get(j | k &lt;&lt; <span class="number">11</span>) != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> k;</span><br><span class="line">		<span class="keyword">if</span> (mapTable.get(j | (k + <span class="number">1</span>) &lt;&lt; <span class="number">11</span>) != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> k;</span><br><span class="line">		<span class="keyword">if</span> (mapTable.get(j | (k - <span class="number">1</span>) &lt;&lt; <span class="number">11</span>) != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> k;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然所有测试用例都可以在时间限制内运行完毕,但<strong>时间复杂度O(n^2)</strong>，运行时间351ms，只击败了7.82%的用户……这不能忍。</p>
+<h1 id="版本三"><a href="#版本三" class="headerlink" title="版本三"></a>版本三</h1><p>深度优先+记忆搜索：<br>将版本一和二结合，将深度优先搜索的结果及时记录在每块石头的力量表中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span>[] stones;</span><br><span class="line">	HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;Integer, Integer&gt;();</span><br><span class="line">	HashMap&lt;Integer, Boolean&gt; mapKey = <span class="keyword">new</span> HashMap&lt;Integer, Boolean&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canCross</span><span class="params">(<span class="keyword">int</span>[] stones)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> len = stones.length;</span><br><span class="line">		<span class="keyword">this</span>.stones = stones;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">			map.put(stones[i], i);</span><br><span class="line"></span><br><span class="line">		mapKey.put(<span class="number">0</span>, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> solve(<span class="number">1</span>, stones[len - <span class="number">1</span>], <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> pos, <span class="keyword">int</span> endPos, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (k == <span class="number">0</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">int</span> keyChar = pos &lt;&lt; <span class="number">11</span> | k ;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (pos == endPos)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (mapKey.get(keyChar) != <span class="keyword">null</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> ((pos &gt; endPos) || (map.get(pos) == <span class="keyword">null</span>)) &#123;</span><br><span class="line">			mapKey.put(keyChar, <span class="keyword">false</span>);</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (solve(pos + k - <span class="number">1</span>, endPos, k - <span class="number">1</span>))</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span> (solve(pos + k, endPos, k))</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">		<span class="keyword">if</span> (solve(pos + k + <span class="number">1</span>, endPos, k + <span class="number">1</span>))</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">		mapKey.put(keyChar, <span class="keyword">false</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>时间复杂度小于O(n^2)</strong>，运行时间50ms左右。</p>
+<hr>
+<h1 id="番外篇"><a href="#番外篇" class="headerlink" title="番外篇"></a>番外篇</h1><p>上述版本二与版本三中，都有类似代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> keyChar = pos &lt;&lt; <span class="number">11</span> | k ;</span><br></pre></td></tr></table></figure></p>
+<p>这行代码的作用是，将当前石头位置(pos)和当前跳跃力量(k)写进同一个int值，这个int将在后面<strong>作为哈希表的键值</strong>，建立以二维数组为键值的哈希表。这受启发于博客：<a href="https://blog.csdn.net/neuldp/article/details/52612725" target="_blank" rel="noopener">安定区：动态规划 DP leetcode403 青蛙过河问题</a>。</p>
+<h2 id="为什么是左移11位？"><a href="#为什么是左移11位？" class="headerlink" title="为什么是左移11位？"></a>为什么是左移11位？</h2><p>这取决于最远那一颗石头的距离，也就是数组最后一个数字可能的最大值。原题目中说道：</p>
+<blockquote>
+<p>Note:<br>  The number of stones is ≥ 2 and is &lt; 1,100.<br>    Each stone’s position will be a non-negative integer &lt; 2^31.<br>    The first stone’s position is always 0.</p>
+</blockquote>
+<p>石头总数小于1100，根据每次跳跃最多只能比上一次多跳1，可以得知最远的跳跃方案：</p>
+<blockquote>
+<p> 0,1,3,6,10,15,…</p>
+</blockquote>
+<p>通项公式为：</p>
+<blockquote>
+<p>f(n)=n*(n+1)/2</p>
+</blockquote>
+<p>最后一块石头最远为1099*1100/2=604450，可以用20位二进制数表示—2^20=1048576。</p>
+<p>而石头总数1100可以用11位二进制数表示—-2^11=2,048。</p>
+<p>20+11=31位，刚好可以由一个int（32位）容纳。所以，左移11位，将后11位存储力量信息，将前21位存储位置信息。<br>这样的键值可以无损地模拟数组，并建立哈希表。相比于直接用数组作为键值的哈希表，<strong>读写速度得到提升</strong>，<strong>空间复杂度更小</strong>。这都依赖于石头总数小于1100，与其说是巧合，不如说是出题人给出的提示:)</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[LeetCode答题框架(Java+Eclipse)]]></title>
+      <url>https://zhangnai.xin/2016/09/20/LeetCode-Framework/</url>
+      <content type="html"><![CDATA[<h1 id="记录我的LeetCode答题框架。"><a href="#记录我的LeetCode答题框架。" class="headerlink" title="记录我的LeetCode答题框架。"></a>记录我的LeetCode答题框架。</h1><p>我在LeetCode中答过的题代码全部托管在GitHub：<a href="https://github.com/xiaobai050/leetcode" target="_blank" rel="noopener">xiaobai050/leetcode</a></p>
+<a id="more"></a>
+<p>最初在LeetCode上学习在线编程时，由于不熟练，脑中还没有答题的框架，测试用例、待提交代码、入口方法之间的耦合过大，添加、修改测试用例需要修改源代码，导致调试效率过低，不够优雅。</p>
+<p>为了尽可能方便调试，高效编辑，分离测试用例和算法实现，改进整理出了自己顺手的答题框架，记录下来。万事开头难，如果能帮助到想我当初一样迷茫的初学者，就更好不过了:)</p>
+<p>目录结构：</p>
+<ul>
+<li>LeetCode ——项目名称，方便Eclipse内置Git对代码进行管理和多终端同步<ul>
+<li>pid1 ——题目包，每个题目封装在一个单独的包中，包名用LeetCode题目编号表示<ul>
+<li>Solution.java ——算法类，注意到LeetCode每道题目的代码类名为Solution</li>
+<li>Main.java ——包含主函数（控制逻辑、测试用例数组）、测试函数（测试结果输出、算法耗时）</li>
+</ul>
+</li>
+<li>pid2 <ul>
+<li>Solution.java</li>
+<li>Main.java</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>以具体题目为例：<a href="https://leetcode.com/problems/unique-binary-search-trees/" target="_blank" rel="noopener">96. Unique Binary Search Trees</a></p>
+<ol>
+<li>拿到题目，首先在创建题目包pid96;</li>
+<li>新建类：Main.java，并创建方法： main 和 test;</li>
+<li>新建类：Solution.java，将算法方法代码用题目中原始代码进行替换，并添加默认返回值;</li>
+<li>在main方法中新建测试用例数组，并循环调用测试方法test(input);</li>
+<li>在test方法中实例化Solution类，执行算法，并在首尾计时统计运行时间。</li>
+</ol>
+<p>代码内容如下：</p>
+<h2 id="main-java"><a href="#main-java" class="headerlink" title="main.java"></a>main.java</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> pid96;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Unique Binary Search Trees </span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Given n, how many structurally unique BST's</span></span><br><span class="line"><span class="comment"> * (binary search trees) that store values 1...n?</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * For example, Given n = 3, there are a total of 5 unique BST's.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> *  1         3     3      2      1</span></span><br><span class="line"><span class="comment"> *   \       /     /      / \      \</span></span><br><span class="line"><span class="comment"> *    3     2     1      1   3      2</span></span><br><span class="line"><span class="comment"> *   /     /       \                 \</span></span><br><span class="line"><span class="comment"> *  2     1         2                 3</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> 白</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span>[] testTable = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">10</span> &#125;;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> input : testTable) &#123;</span><br><span class="line">			test(input);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">(<span class="keyword">int</span> input)</span> </span>&#123;</span><br><span class="line">		Solution solution = <span class="keyword">new</span> Solution();</span><br><span class="line">		<span class="keyword">int</span> output;</span><br><span class="line">		<span class="keyword">long</span> begin = System.currentTimeMillis();</span><br><span class="line">		output = solution.numTrees(input);</span><br><span class="line">		<span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">		System.out.println(input + <span class="string">":	output="</span> + output);</span><br><span class="line">		System.out.println();</span><br><span class="line">		System.out.println(<span class="string">"耗时："</span> + (end - begin) + <span class="string">"ms"</span>);</span><br><span class="line">		System.out.println(<span class="string">"-------------------"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Solution-java"><a href="#Solution-java" class="headerlink" title="Solution.java"></a>Solution.java</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> pid96;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numTrees</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来开始写算法，全部在Solution.java中完成。</p>
+<hr>
+<h2 id="完成后如下："><a href="#完成后如下：" class="headerlink" title="完成后如下："></a>完成后如下：</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> pid96;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numTrees</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(n&lt;=<span class="number">1</span>)<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">2</span>)<span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> [] table= <span class="keyword">new</span> <span class="keyword">int</span>[n+<span class="number">1</span>];</span><br><span class="line">        </span><br><span class="line">        table[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">        table[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        table[<span class="number">2</span>]=<span class="number">2</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;n;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=i;j++)&#123;</span><br><span class="line">                table[i+<span class="number">1</span>]+=table[i-j]*table[j];                </span><br><span class="line">            &#125;            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> table[n];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">0:	output=1</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">1:	output=1</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">2:	output=2</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">3:	output=5</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">4:	output=14</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">5:	output=42</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">6:	output=132</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br><span class="line">10:	output=16796</span><br><span class="line"></span><br><span class="line">耗时：0ms</span><br><span class="line">-------------------</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[平衡二叉树学习]]></title>
+      <url>https://zhangnai.xin/2016/09/13/Binary-Search-Tree/</url>
+      <content type="html"><![CDATA[<h2 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h2><p>平衡二叉树的特点是，小的值在左边，大的值在右边。</p>
+<a id="more"></a>
+<p>用<a href="https://visualgo.net/bst" target="_blank" rel="noopener">VisuAlgo</a>画一个简单的平衡二叉树：</p>
+<img src="/2016/09/13/Binary-Search-Tree/平衡树图.png" title="平衡树图">
+<p>再随机生成一个：</p>
+<img src="/2016/09/13/Binary-Search-Tree/平衡树随机.png" title="平衡树随机">
+<p>可以发现规律：整棵树中，所有节点的值从左至右逐渐增大。</p>
+<h2 id="什么是高度平衡-AVL-二叉树？"><a href="#什么是高度平衡-AVL-二叉树？" class="headerlink" title="什么是高度平衡(AVL)二叉树？"></a>什么是高度平衡(AVL)二叉树？</h2><p>WiKi解释如下： </p>
+<blockquote>
+<p>在计算机科学中，AVL树是最先发明的自平衡二叉查找树。在AVL树中<strong>任何节点的两个子树的高度最大差别为一</strong>，所以它也被称为高度平衡树。查找、插入和删除在平均和最坏情况下都是O（log n）。增加和删除可能需要通过一次或多次树旋转来重新平衡这个树。</p>
+</blockquote>
+<img src="/2016/09/13/Binary-Search-Tree/高度平衡树.png" title="高度平衡树">
+<p>高度平衡树经常涉及到<strong>旋转</strong>这个概念，简单来说就是高度平衡树插入或删除某个节点可能破坏平衡，这时就需要旋转一些（3个）节点来恢复树的平衡。<br>旋转哪三个呢？实际上只有四种情况，根据不同情况选择不同的旋转方法。很多人讲得很详细，不搬运了，可以参考这里：<a href="https://www.cnblogs.com/eniac12/p/5512312.html" target="_blank" rel="noopener">高度平衡的二叉搜索树(AVL树)-逝者如斯,不舍昼夜</a>。</p>
+<h3 id="AVL树的四种旋转"><a href="#AVL树的四种旋转" class="headerlink" title="AVL树的四种旋转"></a>AVL树的四种旋转</h3><img src="/2016/09/13/Binary-Search-Tree/LR.png" title="LR">
+<img src="/2016/09/13/Binary-Search-Tree/RL.png" title="RL">
+<img src="/2016/09/13/Binary-Search-Tree/LL.png" title="LL">
+<img src="/2016/09/13/Binary-Search-Tree/RR.png" title="RR">
+<p>由于整棵树中，从左至右逐渐增大，旋转可理解为左右顺序不变，垂直映射到</p>
+<img src="/2016/09/13/Binary-Search-Tree/123.png" width="123">
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[递归学习]]></title>
+      <url>https://zhangnai.xin/2016/09/08/Recursion/</url>
+      <content type="html"><![CDATA[<p>递归、循环的区别：</p>
+<ul>
+<li><p>循环：循环嵌套层数由代码结构决定，维度不可变。</p>
+</li>
+<li><p>递归：能产生循环嵌套，<strong>可以扩展循环层数</strong>。</p>
+</li>
+</ul>
+<a id="more"></a>
+<h1 id="举例：遍历所有组合——-C6取3"><a href="#举例：遍历所有组合——-C6取3" class="headerlink" title="举例：遍历所有组合—— C6取3"></a>举例：遍历所有组合—— C6取3</h1><blockquote>
+<p>[1,2,3]     [1,2,4]  [1,2,5]  [1,2,6]  [1,3,4]  [1,3,5]  [1,3,6]  [1,4,5]  [1,4,6]  [1,5,6]<br>[2,3,4]  [2,3,5]  [2,3,6]  [2,4,5]  [2,4,6]  [2,5,6]<br>[3,4,5]  [3,4,6]  [3,5,6]<br>[4,5,6]</p>
+</blockquote>
+<ul>
+<li><p>循环：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">4</span>;i++)</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=i;j&lt;=<span class="number">5</span>;j++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> k=j;k&lt;=<span class="number">6</span>;k++)&#123;</span><br><span class="line">			temp.set(<span class="number">0</span>, i);</span><br><span class="line">			temp.set(<span class="number">1</span>, j);</span><br><span class="line">			temp.set(<span class="number">2</span>, k);</span><br><span class="line">			rtn.add(temp);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<p>每个数组有三个元素，用三层for循环。</p><p></p>
+</li>
+</ul>
+<ul>
+<li>递归：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//计算C6取3</span></span><br><span class="line"><span class="comment">//遍历数字范围：start=1，end=6</span></span><br><span class="line"><span class="comment">//小容器容量为3：totle=3</span></span><br><span class="line"><span class="comment">//小容器内计数器从零开始计数：count=0</span></span><br><span class="line"><span class="comment">//综上，调用solve(0,3,1,6);</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">solve</span><span class="params">(<span class="keyword">int</span> count, <span class="keyword">int</span> totle, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (count == totle) &#123;</span><br><span class="line">		rtn.add(temp);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= end; i++) &#123;</span><br><span class="line">		temp.set(count, i);</span><br><span class="line">		solve(count + <span class="number">1</span>, totle, i + <span class="number">1</span>, end);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="如果遍历C6取4呢？"><a href="#如果遍历C6取4呢？" class="headerlink" title="如果遍历C6取4呢？"></a>如果遍历C6取4呢？</h1><ul>
+<li><p>循环：加一层for循环</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">3</span>;i++)</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=i;j&lt;=<span class="number">4</span>;j++)</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> k=j;k&lt;=<span class="number">5</span>;k++)</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> l=k;l&lt;=<span class="number">6</span>;l++)&#123;</span><br><span class="line">				temp.set(<span class="number">0</span>, i);</span><br><span class="line">				temp.set(<span class="number">1</span>, j);</span><br><span class="line">				temp.set(<span class="number">2</span>, k);</span><br><span class="line">				temp.set(<span class="number">3</span>, l);</span><br><span class="line">				rtn.add(temp);</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>递归：只需将入口参数totle由3修改为4即可：<br>solve(0,<strong><em>4</em></strong>,1,6);</p>
+</li>
+</ul>
+<h1 id="更一般地，如果遍历Cn取k"><a href="#更一般地，如果遍历Cn取k" class="headerlink" title="更一般地，如果遍历Cn取k"></a>更一般地，如果遍历Cn取k</h1><ul>
+<li>递归：n和k为变量，递归依然只需更改入口参数：<br>solve(0,<strong><em>k</em></strong> ,1, <strong><em>n</em></strong>);</li>
+</ul>
+<ul>
+<li>循环：呵呵</li>
+</ul>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 算法 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+    
+    <entry>
+      <title><![CDATA[tags]]></title>
+      <url>https://zhangnai.xin/tags/index.html</url>
+      <content type="html"></content>
+    </entry>
+    
+  
+</search>
