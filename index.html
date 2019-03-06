@@ -601,22 +601,22 @@
           <p>对hexo页面排版的改动时常需要改主题目录里的文件，但主题也会升级，这意味着用户和主题开发者可能会改动相同的代码，如果不妥善管理代码，需要升级主题时，可能会很不优雅。本文以Next主题为例。</p>
 <h1 id="手动升级"><a href="#手动升级" class="headerlink" title="手动升级"></a>手动升级</h1><p>面对升级版本之间的改动，一种容易想到的方法是纯手动升级。这里有两个案例</p>
 <ol>
-<li><p><a href="https://ricky.moe/2017/06/28/hexo-theme-update/" target="_blank" rel="noopener">Hexo 主题快速升级办法-知识沉言</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly9yaWNreS5tb2UvMjAxNy8wNi8yOC9oZXhvLXRoZW1lLXVwZGF0ZS8=" title="https://ricky.moe/2017/06/28/hexo-theme-update/">Hexo 主题快速升级办法-知识沉言<i class="fa fa-external-link"></i></span></p>
 <blockquote>
 <p>手动保存主题改动过的文件<br>如果你在themes/xxx主题文件有自定义的修改，请自行手动备份一下；如果你是大改的话，我也没有好办法</p>
 </blockquote>
 </li>
-<li><p><a href="https://zerosoul.github.io/2016/06/15/upgrade-hexo-to-3-2/" target="_blank" rel="noopener">Hexo升级之坑-杨二小</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly96ZXJvc291bC5naXRodWIuaW8vMjAxNi8wNi8xNS91cGdyYWRlLWhleG8tdG8tMy0yLw==" title="https://zerosoul.github.io/2016/06/15/upgrade-hexo-to-3-2/">Hexo升级之坑-杨二小<i class="fa fa-external-link"></i></span></p>
 <blockquote>
 <p>断断续续折腾了两天，才升级成功。所以，如果有啥感想，那就是：没事别瞎TM升级！当然，如果一定要升级，最好做增量升级：另起炉灶，一项一项地加功能，这样好定位问题，也容易回滚。</p>
 </blockquote>
 </li>
 </ol>
 <p>看来手动升级不够优雅，容易采坑。</p>
-<h1 id="通过git升级"><a href="#通过git升级" class="headerlink" title="通过git升级"></a>通过git升级</h1><p>为了避免手动升级，一个思路是采用git仓库管理主题目录，当主题升级时，采用git进行平滑升级。<br>这看似优雅，却会引入另一个问题：如何在主博客仓库中合理管理一个子主题仓库？<a href="https://github.com/iissnan/hexo-theme-next/issues/932" target="_blank" rel="noopener">NexT Issue #932</a>有很多讨论，也有一些解决方案，这里列出几个：</p>
-<h2 id="1-采用数据文件的方式"><a href="#1-采用数据文件的方式" class="headerlink" title="1 采用数据文件的方式"></a>1 采用数据文件的方式</h2><p>参考<a href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/DATA-FILES.md" target="_blank" rel="noopener">数据文件的介绍</a>和<a href="https://github.com/iissnan/hexo-theme-next/issues/328" target="_blank" rel="noopener">NexT Issue #328</a>。采用数据文件也只能避免_config.yml文件冲突，对于用户修改页面模板情况就没办法了。</p>
+<h1 id="通过git升级"><a href="#通过git升级" class="headerlink" title="通过git升级"></a>通过git升级</h1><p>为了避免手动升级，一个思路是采用git仓库管理主题目录，当主题升级时，采用git进行平滑升级。<br>这看似优雅，却会引入另一个问题：如何在主博客仓库中合理管理一个子主题仓库？<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lpc3NuYW4vaGV4by10aGVtZS1uZXh0L2lzc3Vlcy85MzI=" title="https://github.com/iissnan/hexo-theme-next/issues/932">NexT Issue #932<i class="fa fa-external-link"></i></span>有很多讨论，也有一些解决方案，这里列出几个：</p>
+<h2 id="1-采用数据文件的方式"><a href="#1-采用数据文件的方式" class="headerlink" title="1 采用数据文件的方式"></a>1 采用数据文件的方式</h2><p>参考<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RoZW1lLW5leHQvaGV4by10aGVtZS1uZXh0L2Jsb2IvbWFzdGVyL2RvY3MvemgtQ04vREFUQS1GSUxFUy5tZA==" title="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/DATA-FILES.md">数据文件的介绍<i class="fa fa-external-link"></i></span>和<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lpc3NuYW4vaGV4by10aGVtZS1uZXh0L2lzc3Vlcy8zMjg=" title="https://github.com/iissnan/hexo-theme-next/issues/328">NexT Issue #328<i class="fa fa-external-link"></i></span>。采用数据文件也只能避免_config.yml文件冲突，对于用户修改页面模板情况就没办法了。</p>
 <h2 id="2-基于fork-submodule"><a href="#2-基于fork-submodule" class="headerlink" title="2 基于fork + submodule"></a>2 基于fork + submodule</h2><p>维护父子两个仓库大大增加了复杂度，还要fork一份冗余的主题仓库，为了不经常有的主题升级增加这样的复杂性，实在没什么必要。</p>
-<h2 id="3-同步工具"><a href="#3-同步工具" class="headerlink" title="3 同步工具"></a>3 同步工具</h2><p>有用户写了一个hexo同步工具<a href="https://github.com/coneycode/hexo-git-backup" target="_blank" rel="noopener">hexo-git-backup</a>，支持博客、主题的同步，支持自定义commit消息。但本质上是个备份工具，需要删除掉主题目录的.git目录，所以也不支持通过git升级主题。</p>
+<h2 id="3-同步工具"><a href="#3-同步工具" class="headerlink" title="3 同步工具"></a>3 同步工具</h2><p>有用户写了一个hexo同步工具<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvbmV5Y29kZS9oZXhvLWdpdC1iYWNrdXA=" title="https://github.com/coneycode/hexo-git-backup">hexo-git-backup<i class="fa fa-external-link"></i></span>，支持博客、主题的同步，支持自定义commit消息。但本质上是个备份工具，需要删除掉主题目录的.git目录，所以也不支持通过git升级主题。</p>
 <p>采用git升级的方式，确实能够解放双手，平滑升级，但毕竟还是引入了一定的复杂度。有没有一种既能利用git的平滑升级，又不那么复杂的方案？</p>
 <h1 id="暴力但不失优雅的解决方式"><a href="#暴力但不失优雅的解决方式" class="headerlink" title="暴力但不失优雅的解决方式"></a>暴力但不失优雅的解决方式</h1><p>由于主题升级的次数相对较少，一般不如用户修改频繁，所以一种简单易行暴力的方式是，git只用来升级，不用来同步，既能利用git进行平滑升级，又避免了引入双层git的复杂情况。</p>
           <!--noindex-->
@@ -939,7 +939,7 @@
       
         
           
-            <p>用Echarts做动态折线图，参照-&gt;<a href="https://echarts.baidu.com/demo.html#dynamic-data2" target="_blank" rel="noopener">这个demo</a><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
+            <p>用Echarts做动态折线图，参照-&gt;<span class="exturl" data-url="aHR0cHM6Ly9lY2hhcnRzLmJhaWR1LmNvbS9kZW1vLmh0bWwjZHluYW1pYy1kYXRhMg==" title="https://echarts.baidu.com/demo.html#dynamic-data2">这个demo<i class="fa fa-external-link"></i></span><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
 <p>一番试验找到原因，是定义的data格式问题。是我把demo中的randomData()函数改了个格式</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> value = <span class="number">1</span> + (<span class="built_in">Math</span>.random() - <span class="number">0.5</span>) * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> [now, value*<span class="number">1000</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>改完虽然能运行，能实时更新数据，但每次插入一个数据，绘图呈现的效果就是重新绘制全图一样，有一个从水平线扩展成折线图的感觉，所以造成了图形不停跳动。当然，demo中并没有这样的跳动，是很稳定的平移。</p>
@@ -1428,7 +1428,7 @@
 
       
         
-          <p><a href="https://leetcode.com/problems/frog-jump/" target="_blank" rel="noopener">LeetCode:403. Frog Jump</a></p>
+          <p><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS5jb20vcHJvYmxlbXMvZnJvZy1qdW1wLw==" title="https://leetcode.com/problems/frog-jump/">LeetCode:403. Frog Jump<i class="fa fa-external-link"></i></span></p>
 <h1 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h1><p>深度优先搜索：<br>从头至尾遍历石头，从每个石头上分别以k-1,k,k+1的力量向前跳一下，如果这三个力量范围内没有石头，则返回；否则继续先前跳一下……直至到达最后一个石头。</p>
           <!--noindex-->
           
@@ -1585,7 +1585,7 @@
 
       
         
-          <h1 id="记录我的LeetCode答题框架。"><a href="#记录我的LeetCode答题框架。" class="headerlink" title="记录我的LeetCode答题框架。"></a>记录我的LeetCode答题框架。</h1><p>我在LeetCode中答过的题代码全部托管在GitHub：<a href="https://github.com/xiaobai050/leetcode" target="_blank" rel="noopener">xiaobai050/leetcode</a></p>
+          <h1 id="记录我的LeetCode答题框架。"><a href="#记录我的LeetCode答题框架。" class="headerlink" title="记录我的LeetCode答题框架。"></a>记录我的LeetCode答题框架。</h1><p>我在LeetCode中答过的题代码全部托管在GitHub：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3hpYW9iYWkwNTAvbGVldGNvZGU=" title="https://github.com/xiaobai050/leetcode">xiaobai050/leetcode<i class="fa fa-external-link"></i></span></p>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -2061,7 +2061,7 @@
                   
                     
                   
-                  <a href="https://github.com/xiaobai050" title="GitHub &rarr; https://github.com/xiaobai050" rel="noopener" target="_blank"><i class="fa fa-fw fa-github-alt"></i>GitHub</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3hpYW9iYWkwNTA=" title="GitHub &rarr; https://github.com/xiaobai050"><i class="fa fa-fw fa-github-alt"></i>GitHub</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -2072,7 +2072,7 @@
                   
                     
                   
-                  <a href="https://www.zhihu.com/people/xiaobai050" title="知乎 &rarr; https://www.zhihu.com/people/xiaobai050" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS94aWFvYmFpMDUw" title="知乎 &rarr; https://www.zhihu.com/people/xiaobai050"><i class="fa fa-fw fa-globe"></i>知乎</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -2083,7 +2083,7 @@
                   
                     
                   
-                  <a href="https://leetcode.com/xiaobai050/" title="LeetCode &rarr; https://leetcode.com/xiaobai050/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>LeetCode</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS5jb20veGlhb2JhaTA1MC8=" title="LeetCode &rarr; https://leetcode.com/xiaobai050/"><i class="fa fa-fw fa-globe"></i>LeetCode</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -2094,7 +2094,7 @@
                   
                     
                   
-                  <a href="mailto:xiaobai050@gmail.com" title="E-Mail &rarr; mailto:xiaobai050@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  <span class="exturl" data-url="bWFpbHRvOnhpYW9iYWkwNTBAZ21haWwuY29t" title="E-Mail &rarr; mailto:xiaobai050@gmail.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</span>
                 </span>
               
             </div>
@@ -2147,7 +2147,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.8.0</div>
 
 
 
@@ -2155,7 +2155,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.0.1</div>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.0.1</div>
 
 
 
@@ -2707,6 +2707,8 @@
   
 
   
+  <script src="/js/src/exturl.js?v=7.0.1"></script>
+
 
   
 

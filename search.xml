@@ -24,9 +24,9 @@
         
         <tags>
             
-            <tag> 备忘技巧 </tag>
-            
             <tag> 填坑 </tag>
+            
+            <tag> 备忘技巧 </tag>
             
         </tags>
         
@@ -38,22 +38,22 @@
       <content type="html"><![CDATA[<p>对hexo页面排版的改动时常需要改主题目录里的文件，但主题也会升级，这意味着用户和主题开发者可能会改动相同的代码，如果不妥善管理代码，需要升级主题时，可能会很不优雅。本文以Next主题为例。</p>
 <h1 id="手动升级"><a href="#手动升级" class="headerlink" title="手动升级"></a>手动升级</h1><p>面对升级版本之间的改动，一种容易想到的方法是纯手动升级。这里有两个案例</p>
 <ol>
-<li><p><a href="https://ricky.moe/2017/06/28/hexo-theme-update/" target="_blank" rel="noopener">Hexo 主题快速升级办法-知识沉言</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly9yaWNreS5tb2UvMjAxNy8wNi8yOC9oZXhvLXRoZW1lLXVwZGF0ZS8=" title="https://ricky.moe/2017/06/28/hexo-theme-update/">Hexo 主题快速升级办法-知识沉言<i class="fa fa-external-link"></i></span></p>
 <blockquote>
 <p>手动保存主题改动过的文件<br>如果你在themes/xxx主题文件有自定义的修改，请自行手动备份一下；如果你是大改的话，我也没有好办法</p>
 </blockquote>
 </li>
-<li><p><a href="https://zerosoul.github.io/2016/06/15/upgrade-hexo-to-3-2/" target="_blank" rel="noopener">Hexo升级之坑-杨二小</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly96ZXJvc291bC5naXRodWIuaW8vMjAxNi8wNi8xNS91cGdyYWRlLWhleG8tdG8tMy0yLw==" title="https://zerosoul.github.io/2016/06/15/upgrade-hexo-to-3-2/">Hexo升级之坑-杨二小<i class="fa fa-external-link"></i></span></p>
 <blockquote>
 <p>断断续续折腾了两天，才升级成功。所以，如果有啥感想，那就是：没事别瞎TM升级！当然，如果一定要升级，最好做增量升级：另起炉灶，一项一项地加功能，这样好定位问题，也容易回滚。</p>
 </blockquote>
 </li>
 </ol>
 <p>看来手动升级不够优雅，容易采坑。</p>
-<h1 id="通过git升级"><a href="#通过git升级" class="headerlink" title="通过git升级"></a>通过git升级</h1><p>为了避免手动升级，一个思路是采用git仓库管理主题目录，当主题升级时，采用git进行平滑升级。<br>这看似优雅，却会引入另一个问题：如何在主博客仓库中合理管理一个子主题仓库？<a href="https://github.com/iissnan/hexo-theme-next/issues/932" target="_blank" rel="noopener">NexT Issue #932</a>有很多讨论，也有一些解决方案，这里列出几个：</p>
-<h2 id="1-采用数据文件的方式"><a href="#1-采用数据文件的方式" class="headerlink" title="1 采用数据文件的方式"></a>1 采用数据文件的方式</h2><p>参考<a href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/DATA-FILES.md" target="_blank" rel="noopener">数据文件的介绍</a>和<a href="https://github.com/iissnan/hexo-theme-next/issues/328" target="_blank" rel="noopener">NexT Issue #328</a>。采用数据文件也只能避免_config.yml文件冲突，对于用户修改页面模板情况就没办法了。</p>
+<h1 id="通过git升级"><a href="#通过git升级" class="headerlink" title="通过git升级"></a>通过git升级</h1><p>为了避免手动升级，一个思路是采用git仓库管理主题目录，当主题升级时，采用git进行平滑升级。<br>这看似优雅，却会引入另一个问题：如何在主博客仓库中合理管理一个子主题仓库？<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lpc3NuYW4vaGV4by10aGVtZS1uZXh0L2lzc3Vlcy85MzI=" title="https://github.com/iissnan/hexo-theme-next/issues/932">NexT Issue #932<i class="fa fa-external-link"></i></span>有很多讨论，也有一些解决方案，这里列出几个：</p>
+<h2 id="1-采用数据文件的方式"><a href="#1-采用数据文件的方式" class="headerlink" title="1 采用数据文件的方式"></a>1 采用数据文件的方式</h2><p>参考<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RoZW1lLW5leHQvaGV4by10aGVtZS1uZXh0L2Jsb2IvbWFzdGVyL2RvY3MvemgtQ04vREFUQS1GSUxFUy5tZA==" title="https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/DATA-FILES.md">数据文件的介绍<i class="fa fa-external-link"></i></span>和<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lpc3NuYW4vaGV4by10aGVtZS1uZXh0L2lzc3Vlcy8zMjg=" title="https://github.com/iissnan/hexo-theme-next/issues/328">NexT Issue #328<i class="fa fa-external-link"></i></span>。采用数据文件也只能避免_config.yml文件冲突，对于用户修改页面模板情况就没办法了。</p>
 <h2 id="2-基于fork-submodule"><a href="#2-基于fork-submodule" class="headerlink" title="2 基于fork + submodule"></a>2 基于fork + submodule</h2><p>维护父子两个仓库大大增加了复杂度，还要fork一份冗余的主题仓库，为了不经常有的主题升级增加这样的复杂性，实在没什么必要。</p>
-<h2 id="3-同步工具"><a href="#3-同步工具" class="headerlink" title="3 同步工具"></a>3 同步工具</h2><p>有用户写了一个hexo同步工具<a href="https://github.com/coneycode/hexo-git-backup" target="_blank" rel="noopener">hexo-git-backup</a>，支持博客、主题的同步，支持自定义commit消息。但本质上是个备份工具，需要删除掉主题目录的.git目录，所以也不支持通过git升级主题。</p>
+<h2 id="3-同步工具"><a href="#3-同步工具" class="headerlink" title="3 同步工具"></a>3 同步工具</h2><p>有用户写了一个hexo同步工具<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvbmV5Y29kZS9oZXhvLWdpdC1iYWNrdXA=" title="https://github.com/coneycode/hexo-git-backup">hexo-git-backup<i class="fa fa-external-link"></i></span>，支持博客、主题的同步，支持自定义commit消息。但本质上是个备份工具，需要删除掉主题目录的.git目录，所以也不支持通过git升级主题。</p>
 <p>采用git升级的方式，确实能够解放双手，平滑升级，但毕竟还是引入了一定的复杂度。有没有一种既能利用git的平滑升级，又不那么复杂的方案？</p>
 <h1 id="暴力但不失优雅的解决方式"><a href="#暴力但不失优雅的解决方式" class="headerlink" title="暴力但不失优雅的解决方式"></a>暴力但不失优雅的解决方式</h1><p>由于主题升级的次数相对较少，一般不如用户修改频繁，所以一种简单易行暴力的方式是，git只用来升级，不用来同步，既能利用git进行平滑升级，又避免了引入双层git的复杂情况。</p>
 <a id="more"></a>
@@ -66,8 +66,8 @@
 <li>在temp分支上merge想要升级到的版本tag，如果有冲突逐一解决掉。</li>
 <li>至此升级完成，主题目录下的.git<strong>可以</strong>删掉了（销毁临时git仓库）。升级完成后记得将主目录做一次提交，主目录会将主题升级的所有改动进行提交。</li>
 </ol>
-<h2 id="特殊情况——NexT从v5-1-x升级到v6-0-x"><a href="#特殊情况——NexT从v5-1-x升级到v6-0-x" class="headerlink" title="特殊情况——NexT从v5.1.x升级到v6.0.x"></a>特殊情况——NexT从v5.1.x升级到v6.0.x</h2><p>NexT从v5.1.x升级到v6.0.x比较特殊，涉及到代码仓库的更改，代码仓库从<a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">iissnan</a>改为<a href="https://github.com/theme-next" target="_blank" rel="noopener">theme-next</a>。官方推荐这种方式：<a href="https://github.com/theme-next/hexo-theme-next/blob/master/docs/UPDATE-FROM-5.1.X.md" target="_blank" rel="noopener">Update from NexT v5.1.x
-</a>，但这种方式治标不治本，保留了iissnan仓库的主题，新建了来自theme-next仓库的主题，做了一个切换而已；而迁移的过程，还是依赖手动，并没有利用类似git merge的平滑升级。<br>由于本文方法并不强依赖于git提交的连续性，而是只需要临时制作一个git仓库即可，所以天然支持这种更换git仓库的升级。</p>
+<h2 id="特殊情况——NexT从v5-1-x升级到v6-0-x"><a href="#特殊情况——NexT从v5-1-x升级到v6-0-x" class="headerlink" title="特殊情况——NexT从v5.1.x升级到v6.0.x"></a>特殊情况——NexT从v5.1.x升级到v6.0.x</h2><p>NexT从v5.1.x升级到v6.0.x比较特殊，涉及到代码仓库的更改，代码仓库从<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lpc3NuYW4vaGV4by10aGVtZS1uZXh0" title="https://github.com/iissnan/hexo-theme-next">iissnan<i class="fa fa-external-link"></i></span>改为<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RoZW1lLW5leHQ=" title="https://github.com/theme-next">theme-next<i class="fa fa-external-link"></i></span>。官方推荐这种方式：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3RoZW1lLW5leHQvaGV4by10aGVtZS1uZXh0L2Jsb2IvbWFzdGVyL2RvY3MvVVBEQVRFLUZST00tNS4xLlgubWQ=" title="https://github.com/theme-next/hexo-theme-next/blob/master/docs/UPDATE-FROM-5.1.X.md">Update from NexT v5.1.x
+<i class="fa fa-external-link"></i></span>，但这种方式治标不治本，保留了iissnan仓库的主题，新建了来自theme-next仓库的主题，做了一个切换而已；而迁移的过程，还是依赖手动，并没有利用类似git merge的平滑升级。<br>由于本文方法并不强依赖于git提交的连续性，而是只需要临时制作一个git仓库即可，所以天然支持这种更换git仓库的升级。</p>
 <p>本文方法稍加改动就可以适用于NexT从v5.1.x升级到v6.0.x，具体步骤：</p>
 <ol>
 <li>利用iissnan仓库的.git目录，将主题升级到iissnan仓库的最终版本。</li>
@@ -80,9 +80,9 @@
         
         <tags>
             
-            <tag> Git </tag>
-            
             <tag> 备忘技巧 </tag>
+            
+            <tag> Git </tag>
             
             <tag> hexo </tag>
             
@@ -122,7 +122,7 @@
     <entry>
       <title><![CDATA[Echarts坑-动态折线图更新时跳动]]></title>
       <url>https://zhangnai.xin/2017/03/18/Echarts-line/</url>
-      <content type="html"><![CDATA[<p>用Echarts做动态折线图，参照-&gt;<a href="https://echarts.baidu.com/demo.html#dynamic-data2" target="_blank" rel="noopener">这个demo</a><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
+      <content type="html"><![CDATA[<p>用Echarts做动态折线图，参照-&gt;<span class="exturl" data-url="aHR0cHM6Ly9lY2hhcnRzLmJhaWR1LmNvbS9kZW1vLmh0bWwjZHluYW1pYy1kYXRhMg==" title="https://echarts.baidu.com/demo.html#dynamic-data2">这个demo<i class="fa fa-external-link"></i></span><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
 <p>一番试验找到原因，是定义的data格式问题。是我把demo中的randomData()函数改了个格式</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> value = <span class="number">1</span> + (<span class="built_in">Math</span>.random() - <span class="number">0.5</span>) * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> [now, value*<span class="number">1000</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>改完虽然能运行，能实时更新数据，但每次插入一个数据，绘图呈现的效果就是重新绘制全图一样，有一个从水平线扩展成折线图的感觉，所以造成了图形不停跳动。当然，demo中并没有这样的跳动，是很稳定的平移。</p>
@@ -224,7 +224,7 @@
 </ol>
 <hr>
 <h1 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h1><blockquote>
-<p>网站：<a href="https://www.imooc.com/" target="_blank" rel="noopener">imooc</a>，<a href="https://www.itheima.com/" target="_blank" rel="noopener">黑马</a><br>群文件：《项目实战之安全基础》<br><a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=415513252&amp;idx=1&amp;sn=1c1211e23c507c34f9befbf5282a85c8&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">《假如时光能够倒流， 我会这么学习Java》</a><br><a href="https://toutiao.io/posts/394009/app_preview" target="_blank" rel="noopener">《小王的架构师之路》</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513182&amp;idx=1&amp;sn=927a7066c46f854baa5b07cf0fffd654" target="_blank" rel="noopener">《码农和英语》</a></p>
+<p>网站：<span class="exturl" data-url="aHR0cHM6Ly93d3cuaW1vb2MuY29tLw==" title="https://www.imooc.com/">imooc<i class="fa fa-external-link"></i></span>，<span class="exturl" data-url="aHR0cHM6Ly93d3cuaXRoZWltYS5jb20v" title="https://www.itheima.com/">黑马<i class="fa fa-external-link"></i></span><br>群文件：《项目实战之安全基础》<br><span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3M/X19iaXo9TXpBeE9UYzBOekV4Tmc9PSZhbXA7bWlkPTQxNTUxMzI1MiZhbXA7aWR4PTEmYW1wO3NuPTFjMTIxMWUyM2M1MDdjMzRmOWJlZmJmNTI4MmE4NWM4JmFtcDtzY2VuZT0yMSN3ZWNoYXRfcmVkaXJlY3Q=" title="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=415513252&amp;idx=1&amp;sn=1c1211e23c507c34f9befbf5282a85c8&amp;scene=21#wechat_redirect">《假如时光能够倒流， 我会这么学习Java》<i class="fa fa-external-link"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly90b3V0aWFvLmlvL3Bvc3RzLzM5NDAwOS9hcHBfcHJldmlldw==" title="https://toutiao.io/posts/394009/app_preview">《小王的架构师之路》<i class="fa fa-external-link"></i></span><br><span class="exturl" data-url="aHR0cHM6Ly9tcC53ZWl4aW4ucXEuY29tL3M/X19iaXo9TXpBeE9UYzBOekV4Tmc9PSZhbXA7bWlkPTI2NjU1MTMxODImYW1wO2lkeD0xJmFtcDtzbj05MjdhNzA2NmM0NmY4NTRiYWE1YjA3Y2YwZmZmZDY1NA==" title="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513182&amp;idx=1&amp;sn=927a7066c46f854baa5b07cf0fffd654">《码农和英语》<i class="fa fa-external-link"></i></span></p>
 </blockquote>
 ]]></content>
       
@@ -257,9 +257,9 @@
         
         <tags>
             
-            <tag> Git </tag>
-            
             <tag> 备忘技巧 </tag>
+            
+            <tag> Git </tag>
             
         </tags>
         
@@ -268,7 +268,7 @@
     <entry>
       <title><![CDATA[青蛙过河问题]]></title>
       <url>https://zhangnai.xin/2016/09/25/LeetCode-Frog-Jump/</url>
-      <content type="html"><![CDATA[<p><a href="https://leetcode.com/problems/frog-jump/" target="_blank" rel="noopener">LeetCode:403. Frog Jump</a></p>
+      <content type="html"><![CDATA[<p><span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS5jb20vcHJvYmxlbXMvZnJvZy1qdW1wLw==" title="https://leetcode.com/problems/frog-jump/">LeetCode:403. Frog Jump<i class="fa fa-external-link"></i></span></p>
 <h1 id="版本一"><a href="#版本一" class="headerlink" title="版本一"></a>版本一</h1><p>深度优先搜索：<br>从头至尾遍历石头，从每个石头上分别以k-1,k,k+1的力量向前跳一下，如果这三个力量范围内没有石头，则返回；否则继续先前跳一下……直至到达最后一个石头。</p>
 <a id="more"></a>
 <p>没有记忆功能，每次遍历需全盘重新计算，<strong>时间复杂度O(3^n)</strong>,石头多了会超时。于是加入记忆搜索，有了版本二。</p>
@@ -285,7 +285,7 @@
 <p><strong>时间复杂度小于O(n^2)</strong>，运行时间50ms左右。</p>
 <hr>
 <h1 id="番外篇"><a href="#番外篇" class="headerlink" title="番外篇"></a>番外篇</h1><p>上述版本二与版本三中，都有类似代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> keyChar = pos &lt;&lt; <span class="number">11</span> | k ;</span><br></pre></td></tr></table></figure></p>
-<p>这行代码的作用是，将当前石头位置(pos)和当前跳跃力量(k)写进同一个int值，这个int将在后面<strong>作为哈希表的键值</strong>，建立以二维数组为键值的哈希表。这受启发于博客：<a href="https://blog.csdn.net/neuldp/article/details/52612725" target="_blank" rel="noopener">安定区：动态规划 DP leetcode403 青蛙过河问题</a>。</p>
+<p>这行代码的作用是，将当前石头位置(pos)和当前跳跃力量(k)写进同一个int值，这个int将在后面<strong>作为哈希表的键值</strong>，建立以二维数组为键值的哈希表。这受启发于博客：<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L25ldWxkcC9hcnRpY2xlL2RldGFpbHMvNTI2MTI3MjU=" title="https://blog.csdn.net/neuldp/article/details/52612725">安定区：动态规划 DP leetcode403 青蛙过河问题<i class="fa fa-external-link"></i></span>。</p>
 <h2 id="为什么是左移11位？"><a href="#为什么是左移11位？" class="headerlink" title="为什么是左移11位？"></a>为什么是左移11位？</h2><p>这取决于最远那一颗石头的距离，也就是数组最后一个数字可能的最大值。原题目中说道：</p>
 <blockquote>
 <p>Note:<br>  The number of stones is ≥ 2 and is &lt; 1,100.<br>    Each stone’s position will be a non-negative integer &lt; 2^31.<br>    The first stone’s position is always 0.</p>
@@ -315,7 +315,7 @@
     <entry>
       <title><![CDATA[LeetCode答题框架(Java+Eclipse)]]></title>
       <url>https://zhangnai.xin/2016/09/20/LeetCode-Framework/</url>
-      <content type="html"><![CDATA[<h1 id="记录我的LeetCode答题框架。"><a href="#记录我的LeetCode答题框架。" class="headerlink" title="记录我的LeetCode答题框架。"></a>记录我的LeetCode答题框架。</h1><p>我在LeetCode中答过的题代码全部托管在GitHub：<a href="https://github.com/xiaobai050/leetcode" target="_blank" rel="noopener">xiaobai050/leetcode</a></p>
+      <content type="html"><![CDATA[<h1 id="记录我的LeetCode答题框架。"><a href="#记录我的LeetCode答题框架。" class="headerlink" title="记录我的LeetCode答题框架。"></a>记录我的LeetCode答题框架。</h1><p>我在LeetCode中答过的题代码全部托管在GitHub：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3hpYW9iYWkwNTAvbGVldGNvZGU=" title="https://github.com/xiaobai050/leetcode">xiaobai050/leetcode<i class="fa fa-external-link"></i></span></p>
 <a id="more"></a>
 <p>最初在LeetCode上学习在线编程时，由于不熟练，脑中还没有答题的框架，测试用例、待提交代码、入口方法之间的耦合过大，添加、修改测试用例需要修改源代码，导致调试效率过低，不够优雅。</p>
 <p>为了尽可能方便调试，高效编辑，分离测试用例和算法实现，改进整理出了自己顺手的答题框架，记录下来。万事开头难，如果能帮助到想我当初一样迷茫的初学者，就更好不过了:)</p>
@@ -336,7 +336,7 @@
 </li>
 </ul>
 <hr>
-<p>以具体题目为例：<a href="https://leetcode.com/problems/unique-binary-search-trees/" target="_blank" rel="noopener">96. Unique Binary Search Trees</a></p>
+<p>以具体题目为例：<span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS5jb20vcHJvYmxlbXMvdW5pcXVlLWJpbmFyeS1zZWFyY2gtdHJlZXMv" title="https://leetcode.com/problems/unique-binary-search-trees/">96. Unique Binary Search Trees<i class="fa fa-external-link"></i></span></p>
 <ol>
 <li>拿到题目，首先在创建题目包pid96;</li>
 <li>新建类：Main.java，并创建方法： main 和 test;</li>
@@ -367,7 +367,7 @@
       <url>https://zhangnai.xin/2016/09/13/Binary-Search-Tree/</url>
       <content type="html"><![CDATA[<h2 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h2><p>平衡二叉树的特点是，小的值在左边，大的值在右边。</p>
 <a id="more"></a>
-<p>用<a href="https://visualgo.net/bst" target="_blank" rel="noopener">VisuAlgo</a>画一个简单的平衡二叉树：</p>
+<p>用<span class="exturl" data-url="aHR0cHM6Ly92aXN1YWxnby5uZXQvYnN0" title="https://visualgo.net/bst">VisuAlgo<i class="fa fa-external-link"></i></span>画一个简单的平衡二叉树：</p>
 <img src="/2016/09/13/Binary-Search-Tree/平衡树图.png" title="平衡树图">
 <p>再随机生成一个：</p>
 <img src="/2016/09/13/Binary-Search-Tree/平衡树随机.png" title="平衡树随机">
@@ -377,7 +377,7 @@
 <p>在计算机科学中，AVL树是最先发明的自平衡二叉查找树。在AVL树中<strong>任何节点的两个子树的高度最大差别为一</strong>，所以它也被称为高度平衡树。查找、插入和删除在平均和最坏情况下都是O（log n）。增加和删除可能需要通过一次或多次树旋转来重新平衡这个树。</p>
 </blockquote>
 <img src="/2016/09/13/Binary-Search-Tree/高度平衡树.png" title="高度平衡树">
-<p>高度平衡树经常涉及到<strong>旋转</strong>这个概念，简单来说就是高度平衡树插入或删除某个节点可能破坏平衡，这时就需要旋转一些（3个）节点来恢复树的平衡。<br>旋转哪三个呢？实际上只有四种情况，根据不同情况选择不同的旋转方法。很多人讲得很详细，不搬运了，可以参考这里：<a href="https://www.cnblogs.com/eniac12/p/5512312.html" target="_blank" rel="noopener">高度平衡的二叉搜索树(AVL树)-逝者如斯,不舍昼夜</a>。</p>
+<p>高度平衡树经常涉及到<strong>旋转</strong>这个概念，简单来说就是高度平衡树插入或删除某个节点可能破坏平衡，这时就需要旋转一些（3个）节点来恢复树的平衡。<br>旋转哪三个呢？实际上只有四种情况，根据不同情况选择不同的旋转方法。很多人讲得很详细，不搬运了，可以参考这里：<span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vZW5pYWMxMi9wLzU1MTIzMTIuaHRtbA==" title="https://www.cnblogs.com/eniac12/p/5512312.html">高度平衡的二叉搜索树(AVL树)-逝者如斯,不舍昼夜<i class="fa fa-external-link"></i></span>。</p>
 <h3 id="AVL树的四种旋转"><a href="#AVL树的四种旋转" class="headerlink" title="AVL树的四种旋转"></a>AVL树的四种旋转</h3><img src="/2016/09/13/Binary-Search-Tree/LR.png" title="LR">
 <img src="/2016/09/13/Binary-Search-Tree/RL.png" title="RL">
 <img src="/2016/09/13/Binary-Search-Tree/LL.png" title="LL">

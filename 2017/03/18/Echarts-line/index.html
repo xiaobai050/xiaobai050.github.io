@@ -436,7 +436,7 @@
       
 
       
-        <p>用Echarts做动态折线图，参照-&gt;<a href="https://echarts.baidu.com/demo.html#dynamic-data2" target="_blank" rel="noopener">这个demo</a><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
+        <p>用Echarts做动态折线图，参照-&gt;<span class="exturl" data-url="aHR0cHM6Ly9lY2hhcnRzLmJhaWR1LmNvbS9kZW1vLmh0bWwjZHluYW1pYy1kYXRhMg==" title="https://echarts.baidu.com/demo.html#dynamic-data2">这个demo<i class="fa fa-external-link"></i></span><br>每次新插入一个点并删除最前面的点，实现随着时间平滑移动。但遇到一个问题，更新数据时会产生跳动。</p>
 <p>一番试验找到原因，是定义的data格式问题。是我把demo中的randomData()函数改了个格式</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">randomData</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">var</span> value = <span class="number">1</span> + (<span class="built_in">Math</span>.random() - <span class="number">0.5</span>) * <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> [now, value*<span class="number">1000</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>改完虽然能运行，能实时更新数据，但每次插入一个数据，绘图呈现的效果就是重新绘制全图一样，有一个从水平线扩展成折线图的感觉，所以造成了图形不停跳动。当然，demo中并没有这样的跳动，是很稳定的平移。</p>
@@ -622,7 +622,7 @@
                   
                     
                   
-                  <a href="https://github.com/xiaobai050" title="GitHub &rarr; https://github.com/xiaobai050" rel="noopener" target="_blank"><i class="fa fa-fw fa-github-alt"></i>GitHub</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3hpYW9iYWkwNTA=" title="GitHub &rarr; https://github.com/xiaobai050"><i class="fa fa-fw fa-github-alt"></i>GitHub</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -633,7 +633,7 @@
                   
                     
                   
-                  <a href="https://www.zhihu.com/people/xiaobai050" title="知乎 &rarr; https://www.zhihu.com/people/xiaobai050" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS94aWFvYmFpMDUw" title="知乎 &rarr; https://www.zhihu.com/people/xiaobai050"><i class="fa fa-fw fa-globe"></i>知乎</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -644,7 +644,7 @@
                   
                     
                   
-                  <a href="https://leetcode.com/xiaobai050/" title="LeetCode &rarr; https://leetcode.com/xiaobai050/" rel="noopener" target="_blank"><i class="fa fa-fw fa-globe"></i>LeetCode</a>
+                  <span class="exturl" data-url="aHR0cHM6Ly9sZWV0Y29kZS5jb20veGlhb2JhaTA1MC8=" title="LeetCode &rarr; https://leetcode.com/xiaobai050/"><i class="fa fa-fw fa-globe"></i>LeetCode</span>
                 </span>
               
                 <span class="links-of-author-item">
@@ -655,7 +655,7 @@
                   
                     
                   
-                  <a href="mailto:xiaobai050@gmail.com" title="E-Mail &rarr; mailto:xiaobai050@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  <span class="exturl" data-url="bWFpbHRvOnhpYW9iYWkwNTBAZ21haWwuY29t" title="E-Mail &rarr; mailto:xiaobai050@gmail.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</span>
                 </span>
               
             </div>
@@ -708,7 +708,7 @@
 </div>
 
 
-  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> 强力驱动 v3.8.0</div>
 
 
 
@@ -716,7 +716,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.0.1</div>
+  <div class="theme-info">主题 – <span class="exturl theme-link" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lm9yZw==">NexT.Pisces</span> v7.0.1</div>
 
 
 
@@ -1297,6 +1297,8 @@
   
 
   
+  <script src="/js/src/exturl.js?v=7.0.1"></script>
+
 
   
 
