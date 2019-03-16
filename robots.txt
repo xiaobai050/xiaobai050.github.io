@@ -1,2 +1,7 @@
 User-agent: *
+Allow: /
+Allow: /archives/ 
 Disallow: 
+
+Sitemap: https://zhangnai.xin/sitemap.xml
+Sitemap: https://zhangnai.xin/baidusitemap.xml
