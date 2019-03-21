@@ -190,6 +190,8 @@ body {
   line-height: 2;
   color: #555;
   background: #f5f7f9;
+  background-image: url("/images/bg.jpg");
+  background-attachment: fixed;
 }
 @media (max-width: 767px) {
   body {
@@ -1887,7 +1889,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #eeb9ff;
+  background: #ff4ded;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2609,6 +2611,7 @@ ul.breadcrumb li+li:last-child {
   min-height: 700px;
   box-shadow: initial;
   border-radius: initial;
+  opacity: 0.9;
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .content-wrap {
@@ -2632,6 +2635,7 @@ ul.breadcrumb li+li:last-child {
   width: 240px;
   background: #f5f7f9;
   box-shadow: none;
+  opacity: 0.9;
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .sidebar {
